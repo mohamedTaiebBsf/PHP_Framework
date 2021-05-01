@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<ruleset xmlns="MonFramework">
+    <description>Mes règles de formattage</description>
+
+    <arg name="colors" />
+    <arg value="p" />
+
+    <file>src</file>
+
+    <rule ref="PSR2"></rule>
+</ruleset>
