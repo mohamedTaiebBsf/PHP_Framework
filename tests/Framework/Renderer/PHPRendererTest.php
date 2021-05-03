@@ -2,22 +2,21 @@
 
 namespace Tests\Framework;
 
-use Framework\Renderer;
+use Framework\Renderer\PHPRenderer;
 use PHPUnit\Framework\TestCase;
 
-class RendererTest extends TestCase
+class PHPRendererTest extends TestCase
 {
     private $renderer;
 
     public function setUp(): void
     {
-        $this->renderer = new Renderer();
-        $this->renderer->addPath(__DIR__ . '/views');
+        $this->renderer = new PHPRenderer(dirname(__DIR__) . '/views');
     }
 
     public function testRenderTheRightPath()
     {
-        $this->renderer->addPath('blog', __DIR__ . '/views');
+        $this->renderer->addPath('blog', dirname(__DIR__) . '/views');
         $content = $this->renderer->render('@blog/demo');
         $this->assertEquals('Salut les gens', $content);
     }
