@@ -6,6 +6,10 @@ use Framework\Router;
 use function DI\get;
 
 return [
+    'database.host' => 'localhost',
+    'database.username' => 'root',
+    'database.password' => '',
+    'database.name' => 'monsupersite',
     'views.path' => dirname(__DIR__) . '/views',
     'twig.extensions' => [
         get(Router\RouterTwigExtension::class)

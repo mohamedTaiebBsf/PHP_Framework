@@ -4,7 +4,9 @@ use App\Blog\DemoExtension;
 use App\Blog\BlogModule;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
-use function DI\{add, get, create};
+use function DI\add;
+use function DI\get;
+use function DI\create;
 
 return [
     'blog.prefix' => '/blog',
