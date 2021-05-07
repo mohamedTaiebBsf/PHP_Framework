@@ -58,6 +58,7 @@ class App
         }, $request);
 
         $callback = $route->getCallback();
+
         if (is_string($callback)) {
             $callback = $this->container->get($route->getCallback());
         }

@@ -22,7 +22,7 @@ class PostSeeder extends AbstractSeed
         for ($i = 0; $i < 100; $i++) {
             $date = $faker->unixTime('now');
             $name = $faker->catchPhrase;
-            $slug = implode('-', explode(' ', $name));
+            $slug = implode('-', explode(' ', strtolower(str_replace('\'', '', $name))));
             $data[] = [
                 'name' => $name,
                 'slug' => $slug,
