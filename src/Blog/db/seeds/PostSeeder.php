@@ -22,7 +22,7 @@ class PostSeeder extends AbstractSeed
         for ($i = 0; $i < 100; $i++) {
             $date = $faker->unixTime('now');
             $name = $faker->catchPhrase;
-            $slug = implode('-', explode(' ', strtolower(str_replace('\'', '', $name))));
+            $slug = implode('-', explode(' ', strtolower(str_replace('\'', '', $this->skipAccents($name)))));
             $data[] = [
                 'name' => $name,
                 'slug' => $slug,
@@ -35,5 +35,17 @@ class PostSeeder extends AbstractSeed
         $this->table('posts')
             ->insert($data)
             ->save();
+    }
+
+    private function skipAccents($str, $charset = 'utf-8')
+    {
+
+        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+        $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
+        $str = preg_replace('#&[^;]+;#', '', $str);
+
+        return $str;
     }
 }

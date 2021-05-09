@@ -3,6 +3,9 @@
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
+use Framework\Twig\PagerFantaExtension;
+use Framework\Twig\TextExtension;
+use Framework\Twig\TimeExtension;
 use Psr\Container\ContainerInterface;
 use function DI\get;
 
@@ -13,7 +16,10 @@ return [
     'database.name' => 'monsupersite',
     'views.path' => dirname(__DIR__) . '/views',
     'twig.extensions' => [
-        get(Router\RouterTwigExtension::class)
+        get(Router\RouterTwigExtension::class),
+        get(PagerFantaExtension::class),
+        get(TextExtension::class),
+        get(TimeExtension::class)
     ],
     Router::class => \DI\create(),
     RendererInterface::class => \DI\factory(TwigRendererFactory::class),

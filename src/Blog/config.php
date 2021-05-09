@@ -11,7 +11,7 @@ use function DI\create;
 return [
     'blog.prefix' => '/blog',
     'twig.extensions' => add([
-        get(DemoExtension::class)
+        get(DemoExtension::class),
     ]),
     BlogModule::class => create()->constructor(get('blog.prefix'), get(Router::class), get(RendererInterface::class))
 ];

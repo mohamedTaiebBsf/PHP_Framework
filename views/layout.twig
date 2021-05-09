@@ -37,5 +37,30 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"
+        integrity="sha512-SVDh1zH5N9ChofSlNAK43lcNS7lWze6DTVx1JCXH1Tmno+0/1jMpdbR8YDgDUfcUrPp1xyE53G42GFrcM0CMVg=="
+        crossorigin="anonymous"></script>
+<script>
+    const locale = (number, index, totalSec) => {
+        return [
+            ["à l'instant", 'dans un instant'],
+            ['il y a %s secondes', 'dans %s secondes'],
+            ['il y a 1 minute', 'dans 1 minute'],
+            ['il y a %s minutes', 'dans %s minutes'],
+            ['il y a 1 heure', 'dans 1 heure'],
+            ['il y a %s heures', 'dans %s heures'],
+            ['il y a 1 jour', 'dans 1 jour'],
+            ['il y a %s jours', 'dans %s jours'],
+            ['il y a 1 semaine', 'dans 1 semaine'],
+            ['il y a %s semaines', 'dans %s semaines'],
+            ['il y a 1 mois', 'dans 1 mois'],
+            ['il y a %s mois', 'dans %s mois'],
+            ['il y a 1 an', 'dans 1 an'],
+            ['il y a %s ans', 'dans %s ans'],
+        ][index]
+    }
+    timeago.register('fr_FR', locale)
+    timeago.render(document.querySelectorAll('.timeago'), 'fr_FR')
+</script>
 </body>
 </html>

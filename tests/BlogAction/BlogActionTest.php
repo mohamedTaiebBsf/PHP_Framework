@@ -3,6 +3,7 @@
 namespace Tests\Blog\Actions;
 
 use App\Blog\Actions\BlogAction;
+use App\Blog\Entity\Post;
 use App\blog\Table\PostTable;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
@@ -34,9 +35,9 @@ class BlogActionTest extends TestCase
         );
     }
 
-    private function makePost(int $id, string $slug): \stdClass
+    private function makePost(int $id, string $slug): Post
     {
-        $post = new \stdClass();
+        $post = new Post();
         $post->id = $id;
         $post->slug = $slug;
         return $post;
