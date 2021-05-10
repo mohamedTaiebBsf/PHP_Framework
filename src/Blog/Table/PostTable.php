@@ -10,6 +10,11 @@ class PostTable
 {
     private \PDO $pdo;
 
+    /**
+     * PostTable constructor.
+     *
+     * @param \PDO $pdo
+     */
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -39,15 +44,67 @@ class PostTable
      * Récupère un article à partir son ID
      *
      * @param int $id
-     * @return Post
+     * @return Post|null
      */
-    public function find(int $id): Post
+    public function find(int $id): ?Post
     {
         $query = $this->pdo
             ->prepare('SELECT * FROM posts WHERE id = ?');
         $query->execute([$id]);
         $query->setFetchMode(\PDO::FETCH_CLASS, Post::class);
 
-        return $query->fetch();
+        return $query->fetch() ?: null;
+    }
+
+    /**
+     * Mise à jour d'un enregistrement
+     *
+     * @param int $id
+     * @param array $params
+     * @return bool
+     */
+    public function update(int $id, array $params): bool
+    {
+        $fieldQuery = $this->buildFieldQuery($params);
+        $params['id'] = $id;
+        $statement = $this->pdo->prepare("UPDATE posts SET $fieldQuery WHERE id = :id");
+        return $statement->execute($params);
+    }
+
+    /**
+     * Insérer un nouvel enregistrement
+     *
+     * @param array $params
+     * @return bool
+     */
+    public function insert(array $params): bool
+    {
+        $fields = array_keys($params);
+        $values = array_map(function ($field) {
+            return ':' . $field;
+        }, $fields);
+        $statement = $this->pdo->
+        prepare('INSERT INTO posts (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')');
+        return $statement->execute($params);
+    }
+
+    /**
+     * Supprimer un enregistrement
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+
+        $statement = $this->pdo->prepare('DELETE FROM posts WHERE id = ?');
+        return $statement->execute([$id]);
+    }
+
+    private function buildFieldQuery(array $params): string
+    {
+        return join(', ', array_map(function ($field) {
+            return "$field = :$field";
+        }, array_keys($params)));
     }
 }

@@ -26,9 +26,46 @@ class Router
      * @param $callback
      * @param string $name
      */
-    public function get(string $path, $callback, string $name)
+    public function get(string $path, $callback, ?string $name = null)
     {
         $this->router->addRoute(new ZendRoute($path, $callback, ['GET'], $name));
+    }
+
+    /**
+     * @param string $path
+     * @param $callback
+     * @param string|null $name
+     */
+    public function post(string $path, $callback, ?string $name = null)
+    {
+        $this->router->addRoute(new ZendRoute($path, $callback, ['POST'], $name));
+    }
+
+    /**
+     * @param string $path
+     * @param $callback
+     * @param string|null $name
+     */
+    public function delete(string $path, $callback, ?string $name = null)
+    {
+        $this->router->addRoute(new ZendRoute($path, $callback, ['DELETE'], $name));
+    }
+
+    /**
+     * Générer les routes du CRUD
+     *
+     * @param string $prefixPath
+     * @param $callback
+     * @param string $prefixName
+     */
+    public function crud(string $prefixPath, $callback, string $prefixName)
+    {
+        $this->get("$prefixPath", $callback, $prefixName . '.index');
+        $this->get("$prefixPath/new", $callback, $prefixName . '.create');
+        $this->post("$prefixPath/new", $callback);
+        $this->get("$prefixPath/{id:\d+}", $callback, $prefixName . '.edit');
+        $this->post("$prefixPath/{id:\d+}", $callback);
+        $this->delete("$prefixPath/{id:\d+}", $callback, $prefixName . '.delete');
     }
 
     /**
