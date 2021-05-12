@@ -23,6 +23,11 @@
 </nav>
 
 <div class="container">
+    {% if flash('success') %}
+        <div class="alert alert-success">
+            {{ flash('success') }}
+        </div>
+    {% endif %}
     {% block body %}{% endblock %}
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
