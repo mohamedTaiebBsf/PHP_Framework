@@ -48,7 +48,7 @@ class Validator
     public function slug(string $key): self
     {
         $value = $this->getValue($key);
-        $pattern = '/^([a-z0-9]+-?)+$/';
+        $pattern = '/^[a-z0-9]+(-[a-z0-9]+)*$/';
 
         if (!is_null($value) && !preg_match($pattern, $value)) {
             $this->addError($key, 'slug');
@@ -111,6 +111,7 @@ class Validator
         $value = $this->getValue($key);
         $date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
         $errors = \DateTime::getLastErrors();
+
         if ($errors['error_count'] > 0 || $errors['warning_count'] > 0 || $date == false) {
             $this->addError($key, 'datetime', [$format]);
         }
