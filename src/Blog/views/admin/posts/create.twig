@@ -5,8 +5,8 @@
 {% block body %}
     <h1>Créer un article</h1>
 
-    <form action="{{ path('blog.admin.create') }}" method="post">
-        {% include '@blog/admin/form.twig' %}
+    <form action="{{ path(rootPrefix ~ '.create') }}" method="post">
+        {% include viewPath ~ '/form.twig' %}
         <button class="btn btn-primary" type="submit">Créer</button>
     </form>
 {% endblock %}

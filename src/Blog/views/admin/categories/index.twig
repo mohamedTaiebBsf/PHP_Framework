@@ -4,7 +4,7 @@
 
 {% block body %}
     <p class="text-left">
-        <a href="{{ path('blog.admin.create') }}" class="btn btn-primary">Ajouter un article</a>
+        <a href="{{ path(rootPrefix ~ '.create') }}" class="btn btn-primary">Ajouter une catégorie</a>
     </p>
     <table class="table table-striped">
         <thead>
@@ -18,9 +18,9 @@
             <tr>
                 <td>{{ item.name }}</td>
                 <td>
-                    <a href="{{ path('blog.admin.edit', {id: item.id}) }}" class="btn btn-primary btn-sm">Editer</a>
+                    <a href="{{ path(rootPrefix ~ '.edit', {id: item.id}) }}" class="btn btn-primary btn-sm">Editer</a>
                     <form
-                        action="{{ path('blog.admin.delete', {id: item.id}) }}"
+                        action="{{ path(rootPrefix ~ '.delete', {id: item.id}) }}"
                         method="POST"
                         onsubmit="return confirm('Etes vous sûr?')"
                         style="display: inline;"
@@ -34,5 +34,5 @@
         </tbody>
     </table>
 
-    {{ paginate(items, 'blog.admin.index') }}
+    {{ paginate(items, rootPrefix ~ '.index') }}
 {% endblock %}

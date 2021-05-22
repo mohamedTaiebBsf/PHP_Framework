@@ -11,21 +11,31 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class DatabaseTestCase extends TestCase
 {
-    /**
-     * @var PDO
-     */
-    protected $pdo;
-
-    protected $seeds = true;
-
-    private $manager;
-
-    public function setUp(): void
+    public function seedDatabase(\PDO $pdo)
     {
-        $pdo = new PDO('sqlite::memory:', null, null, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
+        $this->getManager($pdo)->migrate('test');
+        $this->getManager($pdo)->seed('test');
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    }
 
+    public function migrateDatabase(\PDO $pdo)
+    {
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
+        $this->getManager($pdo)->migrate('test');
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    }
+
+    public function getPdo()
+    {
+        return new PDO('sqlite::memory:', null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
+        ]);
+    }
+
+    public function getManager(\PDO $pdo)
+    {
         $configArray = require(dirname(__DIR__) . '/phinx.php');
         $configArray['environments']['test'] = [
             'adapter' => 'sqlite',
@@ -34,19 +44,6 @@ class DatabaseTestCase extends TestCase
             'name' => 'test'
         ];
         $config = new Config($configArray);
-        $manager = new Manager($config, new StringInput('migrate -e test'), new NullOutput());
-        $manager->migrate('test');
-        $this->manager = $manager;
-
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $this->pdo = $pdo;
-    }
-
-    public function seedDatabase()
-    {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
-        $this->manager->seed('test');
-
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        return new Manager($config, new StringInput('migrate -e test'), new NullOutput());
     }
 }

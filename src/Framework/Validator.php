@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use Framework\Database\Table;
 use Framework\Validator\ValidationError;
 
 class Validator
@@ -76,6 +77,8 @@ class Validator
     }
 
     /**
+     * Vérifie si la longueur du champ est valide.
+     *
      * @param string $key
      * @param int|null $min
      * @param int|null $max
@@ -106,6 +109,13 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie si le champ est bien une date valide.
+     *
+     * @param string $key
+     * @param string $format
+     * @return $this
+     */
     public function datetime(string $key, string $format = 'Y-m-d H:i:s'): self
     {
         $value = $this->getValue($key);
@@ -114,6 +124,26 @@ class Validator
 
         if ($errors['error_count'] > 0 || $errors['warning_count'] > 0 || $date == false) {
             $this->addError($key, 'datetime', [$format]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si la $key existe dans a table
+     *
+     * @param string $key
+     * @param string $table
+     * @param \PDO $pdo
+     * @return $this
+     */
+    public function exists(string $key, string $table, \PDO $pdo): self
+    {
+        $value = $this->getValue($key);
+        $statement = $pdo->prepare("SELECT id FROM $table WHERE id = ?");
+        $statement->execute([$value]);
+        if ($statement->fetchColumn() === false) {
+            $this->addError($key, 'exists', [$table]);
         }
 
         return $this;

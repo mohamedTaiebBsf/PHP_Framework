@@ -20,6 +20,7 @@ class FormExtensionTest extends TestCase
     public function testField()
     {
         $html = $this->formExtension->field([], 'name', 'demo', 'Titre');
+
         $this->assertSimilar("
             <div class=\"form-group\">
                 <label for=\"name\">Titre</label>
@@ -35,6 +36,27 @@ class FormExtensionTest extends TestCase
             <div class=\"form-group\">
                 <label for=\"name\">Titre</label>
                 <textarea class=\"form-control\" name=\"name\" id=\"name\">demo</textarea>
+            </div>
+        ", $html);
+    }
+
+    public function testSelect()
+    {
+        $html = $this->formExtension->field(
+            [],
+            'name',
+            2,
+            'Titre',
+            ['options' => [1 => 'demo', '2' => 'demo2']]
+        );
+
+        $this->assertSimilar("
+            <div class=\"form-group\">
+                <label for=\"name\">Titre</label>
+                <select class=\"form-control\" name=\"name\" id=\"name\">
+                    <option value=\"1\">demo</option>
+                    <option value=\"2\" selected>demo2</option>
+                </select>
             </div>
         ", $html);
     }
@@ -70,7 +92,8 @@ class FormExtensionTest extends TestCase
 
     private function trim(string $value)
     {
-        $lines = array_map('trim', explode(PHP_EOL, $value));
+        $lines = explode("\n", $value);
+        $lines = array_map('trim', $lines);
         return implode('', $lines);
     }
 }
