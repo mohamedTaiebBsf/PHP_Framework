@@ -25,6 +25,7 @@ class App
 
     /**
      * App constructor.
+     *
      * @param ContainerInterface $container
      * @param string[] $modules Liste des modules à charger
      */

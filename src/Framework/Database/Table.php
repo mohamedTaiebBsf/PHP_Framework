@@ -121,6 +121,16 @@ class Table
     }
 
     /**
+     * Récupère le nombre d'enregistrement
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->fetchColumn("SELECT count(id) FROM {$this->table}");
+    }
+
+    /**
      * Mise à jour d'un enregistrement au niveau de la BDD
      *
      * @param int $id
@@ -232,5 +242,24 @@ class Table
         }
 
         return $record;
+    }
+
+    /**
+     * Récupère la 1ère colonne
+     *
+     * @param string $query
+     * @param array $params
+     * @return mixed
+     */
+    private function fetchColumn(string $query, array $params = [])
+    {
+        $query = $this->pdo
+            ->prepare($query);
+        $query->execute($params);
+        if ($this->entity) {
+            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
+        }
+
+        return $query->fetchColumn();
     }
 }

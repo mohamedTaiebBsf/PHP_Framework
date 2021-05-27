@@ -11,6 +11,7 @@ use Framework\Twig\PagerFantaExtension;
 use Framework\Twig\TextExtension;
 use Framework\Twig\TimeExtension;
 use Psr\Container\ContainerInterface;
+
 use function DI\get;
 
 return [
