@@ -1,6 +1,5 @@
 <?php
 
-
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 
@@ -16,6 +15,22 @@ class PostSeeder extends AbstractSeed
      */
     public function run()
     {
+        // Seeding des catégories
+        $data = [];
+        $faker = Factory::create('fr_FR');
+
+        for ($i = 0; $i < 5; $i++) {
+            $name = $faker->catchPhrase;
+            $slug = implode('-', explode(' ', strtolower(str_replace('\'', '', $this->skipAccents($name)))));
+            $data[] = [
+                'name' => $name,
+                'slug' => $slug,
+            ];
+        }
+
+        $this->table('categories')->insert($data)->save();
+
+        // Seeding des articles
         $data = [];
         $faker = Factory::create('fr_FR');
 
@@ -26,15 +41,14 @@ class PostSeeder extends AbstractSeed
             $data[] = [
                 'name' => $name,
                 'slug' => $slug,
+                'category_id' => rand(1, 5),
                 'content' => $faker->text(3000),
                 'updated_at' => date('Y-m-d H:i:s', $date),
                 'created_at' => date('Y-m-d H:i:s', $date),
             ];
         }
 
-        $this->table('posts')
-            ->insert($data)
-            ->save();
+        $this->table('posts')->insert($data)->save();
     }
 
     private function skipAccents($str, $charset = 'utf-8')

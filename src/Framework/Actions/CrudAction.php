@@ -2,8 +2,6 @@
 
 namespace Framework\Actions;
 
-use App\Blog\Entity\Post;
-use App\blog\Table\PostTable;
 use Framework\Database\Table;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
@@ -27,7 +25,7 @@ class CrudAction
     /**
      * @var mixed
      */
-    private $table;
+    protected $table;
 
     /**
      * @var FlashService

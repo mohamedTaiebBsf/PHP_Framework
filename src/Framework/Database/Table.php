@@ -9,7 +9,7 @@ class Table
     /**
      * @var \PDO
      */
-    private $pdo;
+    protected $pdo;
 
 
     /**
@@ -78,21 +78,46 @@ class Table
     }
 
     /**
+     * Récupère tous les enregistrements
+     *
+     * @return array
+     */
+    public function findAll(): array
+    {
+        $query = $this->pdo->query("SELECT * FROM {$this->table}");
+
+        if ($this->entity) {
+            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
+        } else {
+            $query->setFetchMode(\PDO::FETCH_OBJ);
+        }
+
+        return $query->fetchAll();
+    }
+
+    /**
+     * Récupère une ligne par rapport à un champs
+     *
+     * @param string $field
+     * @param string $value
+     * @return mixed
+     * @throws NoRecordException
+     */
+    public function findBy(string $field, string $value)
+    {
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE $field = ?", [$value]);
+    }
+
+    /**
      * Récupère un élément à partir son ID
      *
      * @param int $id
      * @return mixed
+     * @throws NoRecordException
      */
     public function find(int $id)
     {
-        $query = $this->pdo
-            ->prepare("SELECT * FROM {$this->table} WHERE id = ?");
-        $query->execute([$id]);
-        if ($this->entity) {
-            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
-        }
-
-        return $query->fetch() ?: null;
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE id = ?", [$id]);
     }
 
     /**
@@ -179,8 +204,33 @@ class Table
      */
     public function exists($id): bool
     {
-        $statement = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE id = ?");
-        $statement->execute([$id]);
-        return $statement->fetchColumn() !== false;
+        $query = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE id = ?");
+        $query->execute([$id]);
+        return $query->fetchColumn() !== false;
+    }
+
+    /**
+     * Permet d'executer la requête et de récupérer le 1er résultat
+     *
+     * @param string $query
+     * @param array $params
+     * @return mixed
+     * @throws NoRecordException
+     */
+    protected function fetchOrFail(string $query, array $params = [])
+    {
+        $query = $this->pdo
+            ->prepare($query);
+        $query->execute($params);
+        if ($this->entity) {
+            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
+        }
+
+        $record = $query->fetch();
+        if ($record === false) {
+            throw new NoRecordException();
+        }
+
+        return $record;
     }
 }

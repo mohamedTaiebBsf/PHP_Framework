@@ -2,7 +2,6 @@
 
 namespace App\Blog\Actions;
 
-use App\Blog\Entity\Post;
 use App\blog\Table\CategoryTable;
 use Framework\Actions\CrudAction;
 use Framework\Renderer\RendererInterface;
@@ -42,6 +41,8 @@ class CategoryCrudAction extends CrudAction
         return parent::getValidator($request)
             ->required('name', 'slug')
             ->length('name', 2, 250)
-            ->length('slug', 2, 50);
+            ->length('slug', 2, 50)
+            ->unique('slug', $this->table->getTable(), $this->table->getPdo(), $request->getAttribute('id'))
+            ->slug('slug');
     }
 }

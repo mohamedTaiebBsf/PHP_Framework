@@ -14,8 +14,12 @@ class TextExtension extends AbstractExtension
         ];
     }
 
-    public function excerpt(string $content, int $maxLength = 100)
+    public function excerpt(?string $content, int $maxLength = 100)
     {
+        if (is_null($content)) {
+            return '';
+        }
+
         if (mb_strlen($content) > $maxLength) {
             $excerpt = mb_substr($content, 0, $maxLength);
             $lastSpace = mb_strrpos($excerpt, ' ');
