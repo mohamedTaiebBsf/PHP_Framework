@@ -1,29 +1,19 @@
 <?php
 
-use DI\ContainerBuilder;
-use Framework\App;
-use GuzzleHttp\Psr7\ServerRequest;
-use function Http\Response\send;
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$modules = [
-    \App\Admin\AdminModule::class,
-    \App\Blog\BlogModule::class,
-];
+$app = (new Framework\App(dirname(__DIR__) . '/config/config.php'))
+    ->addModule(\App\Admin\AdminModule::class)
+    ->addModule(\App\Blog\BlogModule::class)
+    ->pipe(\Middlewares\Whoops::class)
+    ->pipe(\Framework\Middleware\TrainingSlashMiddleware::class)
+    ->pipe(\Framework\Middleware\MethodMiddleware::class)
+    ->pipe(\Framework\Middleware\RouterMiddleware::class)
+    ->pipe(\Framework\Middleware\DispatcherMiddleware::class)
+    ->pipe(\Framework\Middleware\NotFoundMiddleware::class);
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions(dirname(__DIR__) . '/config/config.php');
-foreach ($modules as $module) {
-    if ($module::DEFINITIONS) {
-        $builder->addDefinitions($module::DEFINITIONS);
-    }
-}
-$container = $builder->build();
-
-$app = new App($container, $modules);
 if (php_sapi_name() !== 'cli') {
-    $request = ServerRequest::fromGlobals();
+    $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
     $response = $app->run($request);
-    send($response);
+    \Http\Response\send($response);
 }
