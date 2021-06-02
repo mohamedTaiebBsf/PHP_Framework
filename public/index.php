@@ -8,6 +8,7 @@ $app = (new Framework\App(dirname(__DIR__) . '/config/config.php'))
     ->pipe(\Middlewares\Whoops::class)
     ->pipe(\Framework\Middleware\TrainingSlashMiddleware::class)
     ->pipe(\Framework\Middleware\MethodMiddleware::class)
+    ->pipe(\Framework\Middleware\CsrfMiddleware::class)
     ->pipe(\Framework\Middleware\RouterMiddleware::class)
     ->pipe(\Framework\Middleware\DispatcherMiddleware::class)
     ->pipe(\Framework\Middleware\NotFoundMiddleware::class);

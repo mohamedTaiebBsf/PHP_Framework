@@ -11,3 +11,4 @@
 </div>
 {{ field('content', item.content, 'Contenu', {type: 'textarea'}) }}
 {{ field('created_at', item.created_at, 'Date de publication', {class: 'datepicker'}) }}
+{{ csrf_input() }}
