@@ -20,7 +20,7 @@ class CsrfMiddlewareTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->session = [];
+        $this->session = new \ArrayObject();
         $this->middleware = new CsrfMiddleware($this->session);
     }
 
