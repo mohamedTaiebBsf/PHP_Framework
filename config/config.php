@@ -17,6 +17,7 @@ use Psr\Container\ContainerInterface;
 use function DI\get;
 
 return [
+    'env' =>\DI\env('ENV', 'production'),
     'database.host' => 'localhost',
     'database.username' => 'root',
     'database.password' => '',

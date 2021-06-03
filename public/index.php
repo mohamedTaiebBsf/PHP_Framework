@@ -1,8 +1,10 @@
 <?php
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+chdir(dirname(__DIR__));
 
-$app = (new Framework\App(dirname(__DIR__) . '/config/config.php'))
+require 'vendor/autoload.php';
+
+$app = (new Framework\App('config/config.php'))
     ->addModule(\App\Admin\AdminModule::class)
     ->addModule(\App\Blog\BlogModule::class)
     ->pipe(\Middlewares\Whoops::class)
