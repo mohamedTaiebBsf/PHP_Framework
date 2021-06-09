@@ -43,6 +43,7 @@ class CsrfMiddleware implements MiddlewareInterface
     {
         if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE'])) {
             $params = $request->getParsedBody() ?: [];
+
             if (!array_key_exists($this->formKey, $params)) {
                 $this->reject();
             } else {

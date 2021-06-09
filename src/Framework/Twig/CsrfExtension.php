@@ -29,7 +29,7 @@ class CsrfExtension extends AbstractExtension
     public function csrfInput(): string
     {
         return '<input type="hidden" ' .
-            'name="' . $this->csrfMiddleware->getFormKey() . ' ' .
+            'name="' . $this->csrfMiddleware->getFormKey() .
             '" value="' . $this->csrfMiddleware->generateToken() . '" />';
     }
 }

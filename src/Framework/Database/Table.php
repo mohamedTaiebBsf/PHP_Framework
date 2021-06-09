@@ -236,6 +236,7 @@ class Table
         }
 
         $record = $query->fetch();
+
         if ($record === false) {
             throw new NoRecordException();
         }
