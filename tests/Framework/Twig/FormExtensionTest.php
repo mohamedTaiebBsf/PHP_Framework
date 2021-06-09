@@ -54,6 +54,7 @@ class FormExtensionTest extends TestCase
             <div class=\"form-group\">
                 <label for=\"name\">Titre</label>
                 <select class=\"form-control\" name=\"name\" id=\"name\">
+                    <option>Choisir une catégorie...</option>
                     <option value=\"1\">demo</option>
                     <option value=\"2\" selected>demo2</option>
                 </select>

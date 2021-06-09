@@ -42,6 +42,8 @@ class FormExtension extends AbstractExtension
         }
         if ($type === 'textarea') {
             $input = $this->textarea($value, $attributes);
+        } elseif ($type === 'file') {
+            $input = $this->file($attributes);
         } elseif (array_key_exists('options', $options)) {
             $input = $this->select($value, $options['options'], $attributes);
         } else {
@@ -92,7 +94,15 @@ class FormExtension extends AbstractExtension
             $params = ['value' => $key, 'selected' => $key === $value];
             return $html . '<option ' . $this->getHtmlFromArray($params) . '>' . $options[$key] . '</option>';
         }, "");
-        return "<select " . $this->getHtmlFromArray($attributes) . ">{$htmlOptions}</select>";
+        return "<select " . $this->getHtmlFromArray($attributes) . ">
+                    <option>Choisir une catégorie...</option>
+                    {$htmlOptions}
+               </select>";
+    }
+
+    private function file(array $attributes): string
+    {
+        return "<input type=\"file\" " . $this->getHtmlFromArray($attributes) . "/>";
     }
 
     private function convertValue($value): string
