@@ -10,6 +10,7 @@ use Framework\Actions\CrudAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
 use Framework\Session\FlashService;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class PostCrudAction extends CrudAction
@@ -46,6 +47,14 @@ class PostCrudAction extends CrudAction
         $this->postUpload = $postUpload;
     }
 
+    public function delete(Request $request): ResponseInterface
+    {
+        $post = $this->table->find($request->getAttribute('id'));
+        $this->postUpload->delete($post->image);
+
+        return parent::delete($request);
+    }
+
     protected function getNewEntity()
     {
         $post = new Post();
@@ -75,7 +84,7 @@ class PostCrudAction extends CrudAction
 
     protected function getValidator(Request $request)
     {
-        $validator =  parent::getValidator($request)
+        $validator = parent::getValidator($request)
             ->required('content', 'name', 'slug', 'created_at', 'category_id')
             ->length('content', 10)
             ->length('name', 2, 250)
