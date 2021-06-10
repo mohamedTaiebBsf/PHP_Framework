@@ -20,8 +20,8 @@ class PostCrudAction extends CrudAction
     protected $rootPrefix = "blog.admin";
 
     protected $messages = [
-        'create' => 'L\article a bien été créé',
-        'edit' => 'L\article a bien été modifié'
+        'create' => 'L\'article a bien été créé',
+        'edit' => 'L\'article a bien été modifié'
     ];
 
     /**
@@ -72,9 +72,15 @@ class PostCrudAction extends CrudAction
     {
         $params = array_merge($request->getParsedBody(), $request->getUploadedFiles());
         //Upload File
-        $params['image'] = $this->postUpload->upload($params['image'], $post->image);
+        $image = $this->postUpload->upload($params['image'], $post->image);
+        if ($image) {
+            $params['image'] = $image;
+        } else {
+            unset($params['image']);
+        }
+
         $params = array_filter($params, function ($key) {
-            return in_array($key, ['name', 'slug', 'content', 'created_at', 'category_id', 'image']);
+            return in_array($key, ['name', 'slug', 'content', 'created_at', 'category_id', 'image', 'published']);
         }, ARRAY_FILTER_USE_KEY);
 
         return array_merge($params, [

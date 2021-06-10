@@ -33,4 +33,9 @@ class Post
 
         return '/uploads/posts/' . $filename . '_thumb.' . $extension;
     }
+
+    public function getImageUrl()
+    {
+        return '/uploads/posts/' . $this->image;
+    }
 }

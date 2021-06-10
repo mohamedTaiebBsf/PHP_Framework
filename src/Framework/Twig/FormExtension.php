@@ -19,6 +19,7 @@ class FormExtension extends AbstractExtension
 
     /**
      * Génère le code HTML d'un champ
+     *
      * @param $context
      * @param string $key
      * @param $value
@@ -44,6 +45,8 @@ class FormExtension extends AbstractExtension
             $input = $this->textarea($value, $attributes);
         } elseif ($type === 'file') {
             $input = $this->file($attributes);
+        } elseif ($type === 'checkbox') {
+            $input = $this->checkbox($value, $attributes);
         } elseif (array_key_exists('options', $options)) {
             $input = $this->select($value, $options['options'], $attributes);
         } else {
@@ -83,6 +86,8 @@ class FormExtension extends AbstractExtension
     }
 
     /**
+     * Génère un <select>
+     *
      * @param string|null $value
      * @param array $options
      * @param array $attributes
@@ -100,10 +105,34 @@ class FormExtension extends AbstractExtension
                </select>";
     }
 
+    /**
+     * Génère un input de type file
+     *
+     * @param array $attributes
+     * @return string
+     */
     private function file(array $attributes): string
     {
         return "<input type=\"file\" " . $this->getHtmlFromArray($attributes) . "/>";
     }
+
+    /**
+     * Génère un <checkbox>
+     *
+     * @param string|null $value
+     * @param array $attributes
+     * @return string
+     */
+    private function checkbox(?string $value, array $attributes): string
+    {
+        $html = "<input type=\"hidden\" name=\"" . $attributes['name'] . "\" value=\"0\" />";
+        if ($value) {
+            $attributes['checked'] = true;
+        }
+
+        return $html . "<input type=\"checkbox\" " . $this->getHtmlFromArray($attributes) . " value=\"1\" />";
+    }
+
 
     private function convertValue($value): string
     {

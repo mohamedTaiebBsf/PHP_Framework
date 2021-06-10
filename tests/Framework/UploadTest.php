@@ -20,7 +20,7 @@ class UploadTest extends TestCase
 
     protected function tearDown(): void
     {
-        if(file_exists('tests/demo.jpg')){
+        if (file_exists('tests/demo.jpg')) {
             unlink('tests/demo.jpg');
         }
     }
@@ -28,6 +28,11 @@ class UploadTest extends TestCase
     public function testUpload()
     {
         $uploadedFile = $this->getMockBuilder(UploadedFileInterface::class)->getMock();
+
+        $uploadedFile->expects($this->any())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
+
         $uploadedFile->expects($this->any())
             ->method('getClientFilename')
             ->willReturn('demo.jpg');
@@ -42,6 +47,15 @@ class UploadTest extends TestCase
     public function testUploadWithExistingFile()
     {
         $uploadedFile = $this->getMockBuilder(UploadedFileInterface::class)->getMock();
+
+        $uploadedFile->expects($this->any())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
+
+        $uploadedFile->expects($this->any())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
+
         $uploadedFile->expects($this->any())
             ->method('getClientFilename')
             ->willReturn('demo.jpg');
@@ -53,5 +67,24 @@ class UploadTest extends TestCase
             ->with($this->equalTo('tests' . DIRECTORY_SEPARATOR . 'demo_copy.jpg'));
 
         $this->assertEquals('demo_copy.jpg', $this->upload->upload($uploadedFile));
+    }
+
+    public function testDontMoveIfFileNotUploaded()
+    {
+        $uploadedFile = $this->getMockBuilder(UploadedFileInterface::class)->getMock();
+
+        $uploadedFile->expects($this->any())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_CANT_WRITE);
+
+        $uploadedFile->expects($this->any())
+            ->method('getClientFilename')
+            ->willReturn('demo.jg');
+
+        $uploadedFile->expects($this->never())
+            ->method('moveTo')
+            ->with($this->equalTo('tests' . DIRECTORY_SEPARATOR . 'demo.jpg'));
+
+        $this->assertNull($this->upload->upload($uploadedFile));
     }
 }

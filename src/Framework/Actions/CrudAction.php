@@ -43,8 +43,8 @@ class CrudAction
     protected $rootPrefix;
 
     protected $messages = [
-        'create' => 'L\élément a bien été créé',
-        'edit' => 'L\élément a bien été modifié'
+        'create' => 'L\'élément a bien été créé',
+        'edit' => 'L\'élément a bien été modifié'
     ];
 
     use RouterAwareAction;
@@ -99,7 +99,7 @@ class CrudAction
     public function index(Request $request): string
     {
         $params = $request->getQueryParams();
-        $items = $this->table->findPaginated(12, $params['p'] ?? 1);
+        $items = $this->table->findAll()->paginate(12, $params['p'] ?? 1);
 
         return $this->renderer->render($this->viewPath . '/index', compact('items'));
     }

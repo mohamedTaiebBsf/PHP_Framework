@@ -8,7 +8,7 @@ use Psr\Http\Message\UploadedFileInterface;
 class Upload
 {
     protected $path;
-    protected $formats;
+    protected $formats = [];
 
     public function __construct(?string $path = null)
     {
@@ -17,18 +17,22 @@ class Upload
         }
     }
 
-    public function upload(UploadedFileInterface $file, ?string $oldFile = null): string
+    public function upload(UploadedFileInterface $file, ?string $oldFile = null): ?string
     {
-        $this->delete($oldFile);
-        $targetPath = $this->addCopySuffix($this->path . DIRECTORY_SEPARATOR . $file->getClientFilename());
-        $dirname = pathinfo($targetPath, PATHINFO_DIRNAME);
-        if (!file_exists($dirname)) {
-            mkdir($dirname, 777, true);
-        }
-        $file->moveTo($targetPath);
-        $this->generateFormats($targetPath);
+        if ($file->getError() === UPLOAD_ERR_OK) {
+            $this->delete($oldFile);
+            $targetPath = $this->addCopySuffix($this->path . DIRECTORY_SEPARATOR . $file->getClientFilename());
+            $dirname = pathinfo($targetPath, PATHINFO_DIRNAME);
+            if (!file_exists($dirname)) {
+                mkdir($dirname, 777, true);
+            }
+            $file->moveTo($targetPath);
+            $this->generateFormats($targetPath);
 
-        return pathinfo($targetPath)['basename'];
+            return pathinfo($targetPath)['basename'];
+        }
+
+        return null;
     }
 
     private function addCopySuffix(string $targetPath): string
@@ -48,7 +52,7 @@ class Upload
                 unlink($oldFile);
             }
             foreach ($this->formats as $format => $_) {
-                $oldFileWithFormat =$this->getPathWithSuffix($oldFile, $format);
+                $oldFileWithFormat = $this->getPathWithSuffix($oldFile, $format);
                 if (file_exists($oldFileWithFormat)) {
                     unlink($oldFileWithFormat);
                 }

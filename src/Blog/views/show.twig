@@ -4,9 +4,14 @@
 
 {% block body %}
     <h1>{{ post.name }}</h1>
-    {% if post.category_id %}
-        <a href="{{ path('blog.category', { slug: post.category_slug }) }}" title="{{ post.category_name }}">{{ post.category_name }}</a>
+
+    {% if post.categoryId %}
+        <a href="{{ path('blog.category', { slug: post.categorySlug }) }}" title="{{ post.categoryName }}">{{ post.categoryName }}</a>
     {% endif %}
-    <p class="text-muted">{{ post.created_at|ago }}</p>
-    {{ post.content|nl2br }}
+    <p class="text-muted">{{ post.createdAt|ago }}</p>
+        {% if post.image %}
+            <p><img src="{{ post.imageUrl }}" alt="{{ post.name }}" style="width: 100%"></p>
+        {% endif %}
+
+    <p>{{ post.content|nl2br }}</p>
 {% endblock %}
