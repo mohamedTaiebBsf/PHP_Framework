@@ -7,8 +7,12 @@ require 'vendor/autoload.php';
 $app = (new Framework\App('config/config.php'))
     ->addModule(\App\Admin\AdminModule::class)
     ->addModule(\App\Blog\BlogModule::class)
-    ->pipe(\Middlewares\Whoops::class)
+    ->addModule(\App\Auth\AuthModule::class);
+$container = $app->getContainer();
+$app->pipe(\Middlewares\Whoops::class)
     ->pipe(\Framework\Middleware\TrainingSlashMiddleware::class)
+    ->pipe(\App\Auth\Middleware\ForbiddenMiddleware::class)
+    ->pipe($container->get('admin.prefix'), \Framework\Auth\LoggedInMiddleware::class)
     ->pipe(\Framework\Middleware\MethodMiddleware::class)
     ->pipe(\Framework\Middleware\CsrfMiddleware::class)
     ->pipe(\Framework\Middleware\RouterMiddleware::class)

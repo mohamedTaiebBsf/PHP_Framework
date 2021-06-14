@@ -1,0 +1,18 @@
+{% extends 'layout.twig' %}
+
+{% block title 'login' %}
+
+{% block body %}
+    {% if flash('error') %}
+        <div class="alert alert-danger">
+            {{ flash('error') }}
+        </div>
+    {% endif %}
+
+    <form action="{{ path('auth.login') }}" method="POST">
+        {{ field('username', null, 'Nom d\'utilisateur') }}
+        {{ field('password', null, 'Mot de passe') }}
+        {{ csrf_input() }}
+        <button class="btn btn-primary">Se connecter</button>
+    </form>
+{% endblock %}

@@ -23,6 +23,7 @@ class DashboardAction
             },
             ''
         );
+
         return $this->container->get(RendererInterface::class)
             ->render('@admin/dashboard', compact('widgets'));
     }

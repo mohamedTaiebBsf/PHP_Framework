@@ -24,6 +24,12 @@
     <ul class="nav navbar-nav mr-auto">
         {{ admin_menu() }}
     </ul>
+    <ul class="navbar-nav">
+        <form class="nav-item" action="{{ path('auth.logout') }}" method="post">
+            {{ csrf_input() }}
+            <button class="btn btn-outline-warning">Se déconnecter</button>
+        </form>
+    </ul>
 </nav>
 
 <div class="container">
