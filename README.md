@@ -1,7 +1,7 @@
-# Create a simple blog by building a php framework from scratch
+# ✨✨✨ Create a simple blog app by building a php framework from scratch ✨✨✨
 
 ### Description
-Grafikart course - [Mise en pratique de la POO en PHP](https://www.youtube.com/playlist?list=PLjwdMgw5TTLXP6JWACTxDqun0jJ5_sYvK) 🚀
+Grafikart course - [`Mise en pratique de la POO en PHP`](https://www.youtube.com/playlist?list=PLjwdMgw5TTLXP6JWACTxDqun0jJ5_sYvK) 🚀
 
 ### Instructions
 
